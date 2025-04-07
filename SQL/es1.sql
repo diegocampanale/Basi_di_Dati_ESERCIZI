@@ -95,7 +95,12 @@
     GROUP BY NomePersona, CodA
     HAVING COUNT(*)>2
 
--- b) Trovare, per le città in cui sono stati stipulati almeno 100 contratti, la città, il costo mensile massimo degli affitti, 
--- il costo mensile medio degli affitti, la durata massima dei contratti, la durata media dei contratti e 
--- il numero totale di contratti stipulati.
+-- b) Trovare, per le città in cui sono stati stipulati almeno 100 contratti, la città, il costo mensile massimo degli affitti, il costo 
+-- mensile medio degli affitti, la durata massima dei contratti, la durata media dei contratti e il numero totale di contratti stipulati.
+
+    SELECT Città, MAX(CostoAffittoMensile), AVG(CostoAffittoMensile), MAX(DataFine - DataInizio), AVG(DataFine - DataInizio), COUNT(*), COUNT(DISTINCT CodA)
+    FROM ALLOGGIO A, CONTRATTO-AFFITTO CA
+    WHERE A.CodA = CA.Cod AND DataFine IS NOT NULL
+    GROUP BY Citta
+    HAVING COUNT(*) >= 100
 
