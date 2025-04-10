@@ -146,6 +146,22 @@
             FROM SALA S, CONCERTI C
             WHERE Citta='Bologna' AND S.CodS = C.CodS)
 
+        -- b) Soluzione con operatori EXIST 
+            SELECT O.CodO, O.NomeO
+            FROM ORCHESTRA O
+            WHERE NumElementi > 30
+            AND EXISTS (
+                SELECT *
+                FROM SALA S, CONCERTI C
+                WHERE Citta='Torino' AND S.CodS-C.CodS
+                AND O.CodO = C.CodO)
+            AND EXISTS (
+                SELECT *
+                FROM SALA S, CONCERTI C
+                WHERE Citta='Milano' AND S.CodS-C.CodS
+                AND O.CodO = C.CodO)
+            AND NOT EXISTS('... continua ')
+
 -- 2. Sia dato il seguente schema relazionale (le chiavi primarie sono sottolineate, gli attributi opzionali sono indicati con “*”)
 
     CORSO ('CodCorso', NomeC, Anno, Semestre)

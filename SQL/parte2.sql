@@ -35,4 +35,5 @@
         GROUP BY CodA
         HAVING COUNT(*) >= 10
 
+
     
