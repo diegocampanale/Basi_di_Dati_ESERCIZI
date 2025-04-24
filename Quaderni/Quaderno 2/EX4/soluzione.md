@@ -1,13 +1,10 @@
+## Quaderno 2 - Esercizo 4
+
 LUOGO (CodL, Nome, Città, CapienzaMax)
-
 EVENTO (CodE, Titolo, Tipo)
-
 EDIZIONE (CodE, Data, CodL) 
 
-
-
 Visualizzare nome e città dei luoghi con capienza massima superiore a 500 che hanno ospitato solo eventi di tipo “fiera” nel primo semestre del 2019. 
-
 
 
 A -> EDIZIONE_E2
