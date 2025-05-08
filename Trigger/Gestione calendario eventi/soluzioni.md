@@ -87,6 +87,52 @@ AZIONE: Per ogni record modificato (inserito o modificato con update):
 GRANULARITA'  tupla (`FOR EACH ROW`)  
 MODO DI ESECUZIONE: `BEFORE`  
 
+``` [MySQL]
+CREATE TRIGGER massimo_costo_evento
+BEFORE INSERT OR UPDATE OF CostoEvento, CategoriaEvento ON EVENTO
+FOR EACH ROW
+WHEN (NEW.CategoriaEvento = 'Proiezione' AND NEW.CostoEvento > 1500)
 
+BEGIN
+:NEW.CostoEvento := 1500;
+END;
+```
 
+## 3. Vincolo sul numero massimo di eventi per data
+In ogni data non possono essere pianificati più di 10 eventi. Ogni modifica della tabella `CALANDARIO_EVENTI` che causa la violazione del vincolo non deve essere eseguita.
 
+EVENTO: `INSERT ON CALENDARIO_EVENTI OR UPDATE OF Data ON CALENDARIO_EVENTI`  
+TABELLA TARGET: `CALENDARIO_EVENTI`
+CONDIZIONE  
+AZIONE:
+- Se esiste almeno una data che causa la violazione del vincolo -> l'evento non deve essere eseguito (raise_application_error (...))
+- Date che causano la violazione del vincolo
+
+    ``` [MySQL]
+    SELECT Data
+    FROM CALENDARIO_EVENTI
+    group by Data
+    HAVING COUNT(*) > 10;
+    ```
+GRANULARITA': istruzione (`FOR EACH STATEMENT`)  
+MODO DI ESECUZIONE: `AFTER`  
+
+``` [MySQL]
+CREATE TRIGGER verifica_numero_eventi
+AFTER INSERT OR UDPARE OF Data ON CALENDARIO_EVENTI
+DECLARE
+    X NUMBER;
+BEGIN
+
+SELECT COUNT(*) INTO X
+FROM CALENDARIO_EVENTI
+WHERE Data IN (
+    SELECT Data
+    FROM CALENDARIO_EVENTI
+    GROUP BY Data
+    HAVING COUNT(*) > 10)
+IF X <> 0 THEN
+    Raise_application_error(XXX, )
+
+END;
+```
